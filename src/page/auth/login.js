@@ -29,7 +29,7 @@ export default function Login() {
           flexDirection="row"
           width="850px"
           height="550px"
-          rounded={"xl"}
+          rounded={"2xl"}
           bg={useColorModeValue("white", "gray.700")}
           boxShadow={"lg"}
         >
@@ -40,6 +40,8 @@ export default function Login() {
               objectFit="cover"
               width="100%"
               height="100%"
+              borderTopLeftRadius="2xl"
+              borderBottomLeftRadius="2xl"
             />
           </Stack>
           <Stack flex={1} justifyContent="center">
