@@ -17,4 +17,14 @@ const NAV_ITEMS = [
   },
 ];
 
-export { NAV_ITEMS };
+const DEFAULT_MAP_PROPS = {
+  zoom: 15,
+  zoomControl: false,
+  center: [-7.77164, 110.377542],
+  style: {
+    width: "100%",
+    height: "88.5vh",
+  },
+};
+
+export { NAV_ITEMS, DEFAULT_MAP_PROPS };

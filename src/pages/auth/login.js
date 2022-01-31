@@ -4,18 +4,16 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Checkbox,
   Stack,
-  Link,
   Button,
-  Heading,
   Text,
   useColorModeValue,
   Image,
 } from "@chakra-ui/react";
-import Imagelogin from "../../assets/login.png";
-import Imagesipt from "../../assets/sipt.png";
-export default function Login() {
+import Imagelogin from "assets/png/login.png";
+import Imagesipt from "assets/png/sipt.png";
+
+const Login = () => {
   return (
     <Flex
       minH={"100vh"}
@@ -75,4 +73,6 @@ export default function Login() {
       </Stack>
     </Flex>
   );
-}
+};
+
+export default Login;

@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "../page/auth/login";
-import Perencanaan from "../page/perencanaan/perencanaan";
+import Login from "pages/auth/login";
+import Perencanaan from "pages/perencanaan/perencanaan";
 
 const Routesitem = () => {
   return (

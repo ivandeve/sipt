@@ -1,0 +1,2 @@
+export const SET_LAYERS = "SET_LAYERS";
+export const SET_AFFECTED_AREA = "SET_AFFECTED_AREA";
