@@ -1,17 +1,12 @@
-import logo from "./logo.svg";
-import "./App.css";
-import Login from "./page/auth/login";
-import { ChakraProvider } from '@chakra-ui/react'
+import { SIPTTheme } from "theme";
 import Routesitem from "./routes/routes";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <ChakraProvider>
-        <Routesitem />
-      </ChakraProvider>
-    </div>
+    <SIPTTheme>
+      <Routesitem />
+    </SIPTTheme>
   );
-}
+};
 
 export default App;
