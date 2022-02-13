@@ -10,14 +10,15 @@ import {
   MenuItem,
   useColorModeValue,
   Icon,
-  Text,
   Link,
 } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import { NAV_ITEMS } from "utils";
 import Logo from "icons/logo";
 
 const Navbar = () => {
+  const { pathname } = useLocation();
+
   return (
     <Box>
       <Flex
@@ -42,23 +43,40 @@ const Navbar = () => {
           spacing={"75px"}
           fontSize="16px"
         >
-          {NAV_ITEMS.map((nav, i) => (
-            <Link
-              to={nav.href}
-              as={RouterLink}
-              color="secondary.500"
-              key={`${nav.label}-${i}`}
-              _hover={{
-                cursor: "pointer",
-                color: "info.500",
-                borderBottomWidth: "1px",
-                borderBottomStyle: "solid",
-                borderBottomColor: "info.500",
-              }}
-            >
-              {nav.label}
-            </Link>
-          ))}
+          {NAV_ITEMS.map((nav, i) => {
+            const navActive = {
+              color: "info.500",
+              color: "info.500",
+              borderBottomWidth: "1px",
+              borderBottomStyle: "solid",
+              borderBottomColor: "info.500",
+            };
+
+            const navNoActive = {
+              color: "secondary.500",
+            };
+
+            const navStyle = nav.href === pathname ? navActive : navNoActive;
+
+            return (
+              <Link
+                fontSize="md"
+                to={nav.href}
+                as={RouterLink}
+                key={`${nav.label}-${i}`}
+                _hover={{
+                  cursor: "pointer",
+                  color: "info.500",
+                  borderBottomWidth: "1px",
+                  borderBottomStyle: "solid",
+                  borderBottomColor: "info.500",
+                }}
+                {...navStyle}
+              >
+                {nav.label}
+              </Link>
+            );
+          })}
         </Stack>
         <Stack flex={0.1} justify={"flex-end"} direction={"row"} spacing={6}>
           <Flex alignItems={"center"}>

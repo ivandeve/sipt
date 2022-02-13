@@ -1,4 +1,5 @@
 import { colors } from "./collects/colors";
+import { fonts } from "./collects/fonts";
 
 export const configTheme = {
   useSystemColorMode: false,
@@ -7,4 +8,5 @@ export const configTheme = {
 
 export const overrides = {
   colors,
+  fonts,
 };
