@@ -1,0 +1,13 @@
+.chakra-slide-custom {
+  width: 61%;
+  margin: 0 auto;
+  z-index: 999999 !important;
+}
+
+.leaflet-custom {
+  z-index: 9999 !important;
+}
+
+.chakra-modal__content-container {
+  z-index: 9999999999 !important;
+}

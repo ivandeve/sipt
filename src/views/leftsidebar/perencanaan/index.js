@@ -8,13 +8,11 @@ import PlusIcon from "icons/plus";
 
 const PerencanaanView = () => {
   const { register, watch } = useForm();
-  const { dispatch } = useContext(SIPTContext);
+  const { dispatch, state } = useContext(SIPTContext);
 
   const watchMapsUploaded = watch("upload-maps", null);
 
   const [hasUploaded, setHasUploaded] = useState(false);
-
-  console.log(watchMapsUploaded, "HERE");
 
   const handleReaderGEOJSON = (files) => {
     const geojsonData = files[0];
@@ -38,6 +36,17 @@ const PerencanaanView = () => {
       handleReaderGEOJSON(watchMapsUploaded);
     }
   }, [watchMapsUploaded]);
+
+  useEffect(() => {
+    if (state.layers) {
+      setHasUploaded(true);
+    }
+
+    return () => {
+      setHasUploaded(false);
+      document.getElementById("upload-maps").focus();
+    };
+  }, [state.layers]);
 
   return (
     <Box display="block" w="full">
@@ -66,7 +75,9 @@ const PerencanaanView = () => {
           />
         </Button>
 
-        {watchMapsUploaded && <Text>{watchMapsUploaded?.[0]?.name}</Text>}
+        {watchMapsUploaded && state.layers && (
+          <Text>{watchMapsUploaded?.[0]?.name}</Text>
+        )}
       </Stack>
 
       <Stack spacing={3}>

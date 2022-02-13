@@ -1,8 +1,9 @@
-import { SET_AFFECTED_AREA, SET_LAYERS } from "./type";
+import { SET_AFFECTED_AREA, SET_LAYERS, SET_TABLE_BOTTOM_DATA } from "./type";
 
 export const initialState = {
   layers: null,
   affectedArea: null,
+  tableBottomData: null,
 };
 
 export const reducer = (state, action) => {
@@ -11,6 +12,8 @@ export const reducer = (state, action) => {
       return { ...state, layers: action.payload };
     case SET_AFFECTED_AREA:
       return { ...state, affectedArea: action.payload };
+    case SET_TABLE_BOTTOM_DATA:
+      return { ...state, tableBottomData: action.payload };
     default:
       return state;
   }

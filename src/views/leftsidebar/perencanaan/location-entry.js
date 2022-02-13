@@ -1,188 +1,104 @@
 import { useContext } from "react";
-import { useForm, Controller } from "react-hook-form";
 import {
+  ScaleFade,
   Box,
   Button,
   FormControl,
-  FormErrorMessage,
   FormLabel,
-  SlideFade,
+  Input,
 } from "@chakra-ui/react";
-import { AsyncSelect } from "chakra-react-select";
 import { SIPTContext } from "context/context";
 import EmptyData from "components/empty-data";
+import { setAffectedArea, setLayers } from "context/action";
+import { uniqueArray } from "utils/helper";
 
 const LocationEntry = () => {
-  const {
-    watch,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const { state } = useContext(SIPTContext);
+  const { state, dispatch } = useContext(SIPTContext);
 
-  const watchProvince = watch("province", null);
-  const watchCity = watch("city", null);
-  const watchKecamatan = watch("kecamatan", null);
-
-  const handleChooseArea = (values) => {
-    console.log(values, "HERE");
+  const payload = {
+    province: "Jawa Tengah",
+    city: "Kabupaten Semarang",
+    kecamatan: uniqueArray(
+      state.layers?.features?.map((feature) => feature?.properties?.KECAMATAN)
+    ),
+    village: uniqueArray(
+      state.layers?.features?.map((feature) => feature?.properties?.KELURAHAN)
+    ),
+    hierarki_list: uniqueArray(
+      state.layers?.features?.map((feature) => ({
+        kecamatan_name: feature?.properties?.KECAMATAN,
+        village: uniqueArray(
+          state.layers?.features
+            ?.filter(
+              (feature2) =>
+                feature2.properties.KECAMATAN === feature?.properties?.KECAMATAN
+            )
+            ?.map((feature) => feature?.properties?.KELURAHAN)
+        ),
+      }))
+    ),
   };
 
-  const handleReqProvince = async (values) => {
-    const { data: req } = await fetch(
-      `https://api-development.istudios.id/v1/provinsi?filter{nama_provinsi.icontains}=${values}`
-    ).then((res) => res.json());
+  const kecAffectedArea = uniqueArray(
+    state.layers?.features?.map((feature) => feature?.properties?.KECAMATAN)
+  );
 
-    return req.map((province) => ({
-      label: province.nama_provinsi,
-      value: province.nama_provinsi,
-      id: province.id,
-    }));
-  };
-
-  const handleReqCity = async (values) => {
-    const { data: req } = await fetch(
-      `https://api-development.istudios.id/v1/kabkota?provinsi=${watchProvince?.id}&filter{nama_kab_kota.icontains}=${values}`
-    ).then((res) => res.json());
-
-    return req.map((city) => ({
-      label: city.nama_kab_kota,
-      value: city.nama_kab_kota,
-      id: city.id,
-    }));
-  };
-
-  const handleReqKecamatan = async (values) => {
-    const { data: req } = await fetch(
-      `https://api-development.istudios.id/v1/kecamatan?kabkota=${watchCity?.id}&filter{nama_kecamatan.icontains}=${values}`
-    ).then((res) => res.json());
-
-    return req.map((kecamatan) => ({
-      label: kecamatan.nama_kecamatan,
-      value: kecamatan.nama_kecamatan,
-      id: kecamatan.id,
-    }));
-  };
-
-  const handleReqVillage = async (values) => {
-    const { data: req } = await fetch(
-      `https://api-development.istudios.id/v1/desa?kecamatan=${watchKecamatan?.id}&filter{nama_desa.icontains}=${values}`
-    ).then((res) => res.json());
-
-    return req.map((village) => ({
-      label: village.nama_desa,
-      value: village.nama_desa,
-      id: village.id,
-    }));
-  };
+  const villageAffectedArea = uniqueArray(
+    state.layers?.features?.map((feature) => feature?.properties?.KELURAHAN)
+  );
 
   return (
     <Box pb="10">
       {!state.layers && <EmptyData text="Anda belum mengunggah peta" />}
-
-      <SlideFade in={state.layers}>
-        <Box px="3" onSubmit={handleSubmit(handleChooseArea)} as="form">
-          <FormControl mb="5" isInvalid={errors?.province}>
+      <ScaleFade in={state?.layers}>
+        <Box px="3">
+          <FormControl mb="5">
             <FormLabel>Pilih Provinsi</FormLabel>
-            <Controller
-              name="province"
-              control={control}
-              defaultValue={null}
-              rules={{ required: true }}
-              render={({ field: { onChange } }) => (
-                <AsyncSelect
-                  defaultOptions
-                  cacheOptions
-                  loadOptions={handleReqProvince}
-                  onChange={(val) => onChange(val)}
-                />
-              )}
-            />
-
-            {errors?.province && (
-              <FormErrorMessage>Pilih Provinsi !</FormErrorMessage>
-            )}
+            <Input value="Jawa Tengah" readOnly />
           </FormControl>
 
-          <FormControl mb="5" isInvalid={errors?.city}>
+          <FormControl mb="5">
             <FormLabel>Pilih Kabupaten</FormLabel>
-            <Controller
-              name="city"
-              control={control}
-              defaultValue={null}
-              rules={{ required: true }}
-              key={!!watchProvince ? watchProvince : null}
-              render={({ field: { onChange } }) => (
-                <AsyncSelect
-                  cacheOptions
-                  defaultOptions
-                  loadOptions={handleReqCity}
-                  onChange={(val) => onChange(val)}
-                />
-              )}
-            />
-            {errors?.city && (
-              <FormErrorMessage>Pilih Labupaten !</FormErrorMessage>
-            )}
+            <Input value="Kabupaten Semarang" readOnly />
           </FormControl>
 
-          <FormControl mb="5" isInvalid={errors?.kecamatan}>
+          <FormControl mb="5">
             <FormLabel>Pilih Kecamatan</FormLabel>
-            <Controller
-              name="kecamatan"
-              control={control}
-              defaultValue={null}
-              rules={{ required: true }}
-              key={!!watchCity ? watchCity : null}
-              render={({ field: { onChange } }) => (
-                <AsyncSelect
-                  cacheOptions
-                  defaultOptions
-                  loadOptions={handleReqKecamatan}
-                  onChange={(val) => onChange(val)}
-                />
-              )}
-            />
-            {errors?.kecamatan && (
-              <FormErrorMessage>Pilih Kecamatan !</FormErrorMessage>
-            )}
+            <Input value={kecAffectedArea?.join(",\n")} readOnly />
           </FormControl>
 
-          <FormControl mb="5" isInvalid={errors?.village}>
+          <FormControl mb="5">
             <FormLabel>Pilih Desa</FormLabel>
-            <Controller
-              name="village"
-              control={control}
-              defaultValue={null}
-              rules={{ required: true }}
-              key={!!watchKecamatan ? watchKecamatan : null}
-              render={({ field: { onChange } }) => (
-                <AsyncSelect
-                  cacheOptions
-                  defaultOptions
-                  loadOptions={handleReqVillage}
-                  onChange={(val) => onChange(val)}
-                />
-              )}
-            />
-
-            {errors?.village && (
-              <FormErrorMessage>Pilih Desa !</FormErrorMessage>
-            )}
+            <Input value={villageAffectedArea?.join(",\n")} readOnly />
           </FormControl>
 
           <FormControl>
-            <Button w="45%" h="45px" type="button" colorScheme="danger" mr="2">
+            <Button
+              w="45%"
+              h="45px"
+              type="button"
+              colorScheme="danger"
+              mr="2"
+              onClick={() => {
+                dispatch(setLayers(null));
+                dispatch(setAffectedArea(null));
+              }}
+            >
               Batal
             </Button>
 
-            <Button w="45%" h="45px" type="submit" colorScheme="primary">
+            <Button
+              w="45%"
+              h="45px"
+              type="button"
+              colorScheme="primary"
+              onClick={() => dispatch(setAffectedArea(payload))}
+            >
               Pilih
             </Button>
           </FormControl>
         </Box>
-      </SlideFade>
+      </ScaleFade>
     </Box>
   );
 };
